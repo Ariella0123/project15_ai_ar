@@ -34,6 +34,8 @@ class ObjectRecognizer {
             if ($result) $usedProvider = 'agnes';
         }
 
+        
+        // return ['ok' => true, 'data' => $result, 'provider' => $usedProvider];
         if (!$result) {
             return ['ok' => false, 'error' => 'Unable to identify object using active AI providers.'];
         }
@@ -45,6 +47,7 @@ class ObjectRecognizer {
     }
 
     private function validateAndNormalize(array $data): array {
+        
         return [
             'objectLabel' => $data['objectLabel'] ?? 'Unknown Object',
             'productName' => $data['productName'] ?? 'Unknown Product',

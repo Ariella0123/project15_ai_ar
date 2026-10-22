@@ -7,20 +7,18 @@ class GeminiVision extends AIProvider {
     public function recognize(string $imageBase64): ?array {
         if (empty($this->apiKey)) return null;
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key={$this->apiKey}";
-        
+// 确保变量中没有多余的 "models/" 前缀
+    $modelName = preg_replace('/^models\//', '', $this->model);
+
+    // 拼接最终的 API 地址
+    $url = "https://generativelanguage.googleapis.com/v1beta/interactions";        
         $payload = [
-            'contents' => [
+            'model' => $this->model,
+            'input' => [
                 [
-                    'parts' => [
-                        ['text' => $this->getPrompt()],
-                        [
-                            'inline_data' => [
-                                'mime_type' => 'image/jpeg',
-                                'data' => $imageBase64
-                            ]
-                        ]
-                    ]
+                    ['type' => 'text', 'text' => $this->getPrompt()],
+                    ['type' => 'image', 'data' => $imageBase64, 'mime_type' => 'image/jpeg']
+                    
                 ]
             ],
             'generationConfig' => [
@@ -44,6 +42,7 @@ class GeminiVision extends AIProvider {
         if ($httpCode !== 200 || !$response) return null;
 
         $result = json_decode($response, true);
+        
         $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
         
         return $text ? json_decode($text, true) : null;

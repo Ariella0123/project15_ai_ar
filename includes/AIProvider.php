@@ -7,7 +7,7 @@ abstract class AIProvider {
     protected array $fallbackModels;
     protected int $timeout;
 
-    public function __construct(string $apiKey, string $model, array $fallbackModels = [], int $timeout = 30) {
+    public function __construct(string $apiKey, string $model, array $fallbackModels = [], int $timeout = 3000) {
         $this->apiKey = $apiKey;
         $this->model = $model;
         $this->fallbackModels = $fallbackModels;
